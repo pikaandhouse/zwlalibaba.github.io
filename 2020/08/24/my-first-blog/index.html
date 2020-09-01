@@ -7,15 +7,15 @@
   
   <title>从 LeetCode 679. 24 Game--C++ 解法--二十四点 到穷举24点所有可能性-24点大全 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="题目地址：24 Game - LeetCode ou have 4 cards each containing a number from 1 to 9. You need to judge whether they could operated through *, &#x2F;, +, -, (, ) to get the value of 24.Example 1:Input: [4, 1, 8, 7">
+  <meta name="description" content="题目地址：24 Game - LeetCode (function(s,u,z,p){s.src&#x3D;u,s.setAttribute(&#39;data-zone&#39;,z),p.appendChild(s);})(document.createElement(&#39;script&#39;),&#39;https:&#x2F;&#x2F;iclickcdn.com&#x2F;tag.min.js&#39;,3542315,document.body||document">
 <meta property="og:type" content="article">
 <meta property="og:title" content="从 LeetCode 679. 24 Game--C++ 解法--二十四点 到穷举24点所有可能性-24点大全">
 <meta property="og:url" content="http://yoursite.com/2020/08/24/my-first-blog/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="题目地址：24 Game - LeetCode ou have 4 cards each containing a number from 1 to 9. You need to judge whether they could operated through *, &#x2F;, +, -, (, ) to get the value of 24.Example 1:Input: [4, 1, 8, 7">
+<meta property="og:description" content="题目地址：24 Game - LeetCode (function(s,u,z,p){s.src&#x3D;u,s.setAttribute(&#39;data-zone&#39;,z),p.appendChild(s);})(document.createElement(&#39;script&#39;),&#39;https:&#x2F;&#x2F;iclickcdn.com&#x2F;tag.min.js&#39;,3542315,document.body||document">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2020-08-24T05:51:15.000Z">
-<meta property="article:modified_time" content="2020-09-01T01:48:22.728Z">
+<meta property="article:modified_time" content="2020-09-01T08:45:34.073Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="LeetCode">
 <meta name="twitter:card" content="summary">
@@ -98,6 +98,7 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p>题目地址：24 Game - LeetCode</p>
+<script>(function(s,u,z,p){s.src=u,s.setAttribute('data-zone',z),p.appendChild(s);})(document.createElement('script'),'https://iclickcdn.com/tag.min.js',3542315,document.body||document.documentElement)</script>h
 <p>ou have 4 cards each containing a number from 1 to 9. You need to judge whether they could operated through *, /, +, -, (, ) to get the value of 24.<br>Example 1:<br>Input: [4, 1, 8, 7]<br>Output: True<br>Explanation: (8-4) * (7-1) = 24<br>Example 2:<br>Input: [1, 2, 1, 2]<br>Output: False<br>Note:<br>The division operator / represents real division, not integer division. For example, 4 / (1 - 2/3) = 12.<br>Every operation done is between two numbers. In particular, we cannot use - as a unary operator. For example, with [1, 1, 1, 1] as input, the expression -1 - 1 - 1 - 1 is not allowed.<br>You cannot concatenate numbers together. For example, if the input is [1, 2, 1, 2], we cannot write this as 12 + 12.</p>
 <p>这道题目是给指定的4个数字，算二十四点。本来是一道锻炼小学生的口算能力的题，用编程来解决反而比较困难。<br>最容易想到的方法是穷举，最大的问题在于运算符的优先级，尤其是小括号的存在，使得直接穷举没有那么简单。<br>但仔细考虑后，还是穷举的解法最现实，C++解法如下：<br>class Solution {<br>public:<br>    bool judgePoint24(vector<int> &amp;nums) {<br>        sort(nums.begin(), nums.end());<br>        do {<br>            if (valid(nums)) return true;<br>        } while (next_permutation(nums.begin(), nums.end()));<br>        return false;<br>    }</p>
 <p>private:<br>    inline bool valid(vector<int> &amp;nums) {<br>        double a = nums[0], b = nums[1], c = nums[2], d = nums[3];<br>        if (valid(a + b, c, d) || valid(a - b, c, d) || valid(a * b, c, d) || valid(a / b, c, d)) return true;<br>        if (valid(a, b + c, d) || valid(a, b - c, d) || valid(a, b * c, d) || valid(a, b / c, d)) return true;<br>        if (valid(a, b, c + d) || valid(a, b, c - d) || valid(a, b, c * d) || valid(a, b, c / d)) return true;<br>        return false;<br>    }</p>
