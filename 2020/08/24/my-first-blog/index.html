@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>从 LeetCode 679. 24 Game--C++ 解法--二十四点 到穷举24点所有可能性-24点大全 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="题目地址：24 Game - LeetCode ou have 4 cards each containing a number from 1 to 9. You need to judge whether they could operated through *, &#x2F;, +, -, (, ) to get the value of 24.Example 1:Input: [4, 1, 8, 7">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从 LeetCode 679. 24 Game--C++ 解法--二十四点 到穷举24点所有可能性-24点大全">
+<meta property="og:url" content="http://yoursite.com/2020/08/24/my-first-blog/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="题目地址：24 Game - LeetCode ou have 4 cards each containing a number from 1 to 9. You need to judge whether they could operated through *, &#x2F;, +, -, (, ) to get the value of 24.Example 1:Input: [4, 1, 8, 7">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-08-24T05:51:15.000Z">
+<meta property="article:modified_time" content="2020-09-01T01:48:22.728Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="LeetCode">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.0.2"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-my-first-blog" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/08/24/my-first-blog/" class="article-date">
+  <time datetime="2020-08-24T05:51:15.000Z" itemprop="datePublished">2020-08-24</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      从 LeetCode 679. 24 Game--C++ 解法--二十四点 到穷举24点所有可能性-24点大全
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>题目地址：24 Game - LeetCode</p>
+<p>ou have 4 cards each containing a number from 1 to 9. You need to judge whether they could operated through *, /, +, -, (, ) to get the value of 24.<br>Example 1:<br>Input: [4, 1, 8, 7]<br>Output: True<br>Explanation: (8-4) * (7-1) = 24<br>Example 2:<br>Input: [1, 2, 1, 2]<br>Output: False<br>Note:<br>The division operator / represents real division, not integer division. For example, 4 / (1 - 2/3) = 12.<br>Every operation done is between two numbers. In particular, we cannot use - as a unary operator. For example, with [1, 1, 1, 1] as input, the expression -1 - 1 - 1 - 1 is not allowed.<br>You cannot concatenate numbers together. For example, if the input is [1, 2, 1, 2], we cannot write this as 12 + 12.</p>
+<p>这道题目是给指定的4个数字，算二十四点。本来是一道锻炼小学生的口算能力的题，用编程来解决反而比较困难。<br>最容易想到的方法是穷举，最大的问题在于运算符的优先级，尤其是小括号的存在，使得直接穷举没有那么简单。<br>但仔细考虑后，还是穷举的解法最现实，C++解法如下：<br>class Solution {<br>public:<br>    bool judgePoint24(vector<int> &amp;nums) {<br>        sort(nums.begin(), nums.end());<br>        do {<br>            if (valid(nums)) return true;<br>        } while (next_permutation(nums.begin(), nums.end()));<br>        return false;<br>    }</p>
+<p>private:<br>    inline bool valid(vector<int> &amp;nums) {<br>        double a = nums[0], b = nums[1], c = nums[2], d = nums[3];<br>        if (valid(a + b, c, d) || valid(a - b, c, d) || valid(a * b, c, d) || valid(a / b, c, d)) return true;<br>        if (valid(a, b + c, d) || valid(a, b - c, d) || valid(a, b * c, d) || valid(a, b / c, d)) return true;<br>        if (valid(a, b, c + d) || valid(a, b, c - d) || valid(a, b, c * d) || valid(a, b, c / d)) return true;<br>        return false;<br>    }</p>
+<pre><code>inline bool valid(double a, double b, double c) &#123;
+    if (valid(a + b, c) || valid(a - b, c) || valid(a * b, c) || b &amp;&amp; valid(a / b, c)) return true;
+    if (valid(a, b + c) || valid(a, b - c) || valid(a, b * c) || c &amp;&amp; valid(a, b / c)) return true;
+    return false;
+&#125;
+
+inline bool valid(double a, double b) &#123;
+    if (abs(a + b - 24.0) &lt; 0.0001 || abs(a - b - 24.0) &lt; 0.0001 || abs(a * b - 24.0) &lt; 0.0001 ||
+        b &amp;&amp; abs(a / b - 24.0) &lt; 0.0001)
+        return true;
+    return false;
+&#125;</code></pre>
+<p>};<br>既然单个24点可以穷举出来，那么所有的解自然可能枚举出来<br>事实证明现在计算机的运算速度是很快的，即使穷举也能很快算出结果。<br>Python穷举代码如下：<br>from operator import truediv, mul, add, sub</p>
+<p>def judgePoint24(A):<br>    if not A:<br>        return False<br>    if len(A) == 1:<br>        return abs(A[0] - 24) &lt; 1e-6<br>    for i in range(len(A)):<br>        for j in range(len(A)):<br>            if i != j:<br>                B = [A[k] for k in range(len(A)) if i != k != j]<br>                for op in (truediv, mul, add, sub):<br>                    if (op is add or op is mul) and j &gt; i: continue<br>                    if op is not truediv or A[j]:<br>                        B.append(op(A[i], A[j]))<br>                        if judgePoint24(B):<br>                            return True<br>                        B.pop()<br>    return False</p>
+<p>res = []<br>l = sorted(list(set(tuple(sorted([i, j, k, z])) for i in range(1, 11) for j in range(1, 11)<br>                    for k in range(1, 11) for z in range(1, 11))))<br>for i in l:<br>    if judgePoint24(i) is True:<br>        res.append(i)<br>所有的24点可能性大全罗列如下，共566种可能性。<br>1, 1, 1, 8<br>1, 1, 2, 6<br>1, 1, 2, 7<br>1, 1, 2, 8<br>1, 1, 2, 9<br>1, 1, 2, 10<br>1, 1, 3, 4<br>1, 1, 3, 5<br>1, 1, 3, 6<br>1, 1, 3, 7<br>1, 1, 3, 8<br>1, 1, 3, 9<br>1, 1, 3, 10<br>1, 1, 4, 4<br>1, 1, 4, 5<br>1, 1, 4, 6<br>1, 1, 4, 7<br>1, 1, 4, 8<br>1, 1, 4, 9<br>1, 1, 4, 10<br>1, 1, 5, 5<br>1, 1, 5, 6<br>1, 1, 5, 7<br>1, 1, 5, 8<br>1, 1, 6, 6<br>1, 1, 6, 8<br>1, 1, 6, 9<br>1, 1, 7, 10<br>1, 1, 8, 8<br>1, 2, 2, 4<br>1, 2, 2, 5<br>1, 2, 2, 6<br>1, 2, 2, 7<br>1, 2, 2, 8<br>1, 2, 2, 9<br>1, 2, 2, 10<br>1, 2, 3, 3<br>1, 2, 3, 4<br>1, 2, 3, 5<br>1, 2, 3, 6<br>1, 2, 3, 7<br>1, 2, 3, 8<br>1, 2, 3, 9<br>1, 2, 3, 10<br>1, 2, 4, 4<br>1, 2, 4, 5<br>1, 2, 4, 6<br>1, 2, 4, 7<br>1, 2, 4, 8<br>1, 2, 4, 9<br>1, 2, 4, 10<br>1, 2, 5, 5<br>1, 2, 5, 6<br>1, 2, 5, 7<br>1, 2, 5, 8<br>1, 2, 5, 9<br>1, 2, 5, 10<br>1, 2, 6, 6<br>1, 2, 6, 7<br>1, 2, 6, 8<br>1, 2, 6, 9<br>1, 2, 6, 10<br>1, 2, 7, 7<br>1, 2, 7, 8<br>1, 2, 7, 9<br>1, 2, 7, 10<br>1, 2, 8, 8<br>1, 2, 8, 9<br>1, 2, 8, 10<br>1, 3, 3, 3<br>1, 3, 3, 4<br>1, 3, 3, 5<br>1, 3, 3, 6<br>1, 3, 3, 7<br>1, 3, 3, 8<br>1, 3, 3, 9<br>1, 3, 3, 10<br>1, 3, 4, 4<br>1, 3, 4, 5<br>1, 3, 4, 6<br>1, 3, 4, 7<br>1, 3, 4, 8<br>1, 3, 4, 9<br>1, 3, 4, 10<br>1, 3, 5, 6<br>1, 3, 5, 7<br>1, 3, 5, 8<br>1, 3, 5, 9<br>1, 3, 5, 10<br>1, 3, 6, 6<br>1, 3, 6, 7<br>1, 3, 6, 8<br>1, 3, 6, 9<br>1, 3, 6, 10<br>1, 3, 7, 7<br>1, 3, 7, 8<br>1, 3, 7, 9<br>1, 3, 7, 10<br>1, 3, 8, 8<br>1, 3, 8, 9<br>1, 3, 8, 10<br>1, 3, 9, 9<br>1, 3, 9, 10<br>1, 3, 10, 10<br>1, 4, 4, 4<br>1, 4, 4, 5<br>1, 4, 4, 6<br>1, 4, 4, 7<br>1, 4, 4, 8<br>1, 4, 4, 9<br>1, 4, 4, 10<br>1, 4, 5, 5<br>1, 4, 5, 6<br>1, 4, 5, 7<br>1, 4, 5, 8<br>1, 4, 5, 9<br>1, 4, 5, 10<br>1, 4, 6, 6<br>1, 4, 6, 7<br>1, 4, 6, 8<br>1, 4, 6, 9<br>1, 4, 6, 10<br>1, 4, 7, 7<br>1, 4, 7, 8<br>1, 4, 7, 9<br>1, 4, 8, 8<br>1, 4, 8, 9<br>1, 4, 9, 10<br>1, 4, 10, 10<br>1, 5, 5, 5<br>1, 5, 5, 6<br>1, 5, 5, 9<br>1, 5, 5, 10<br>1, 5, 6, 6<br>1, 5, 6, 7<br>1, 5, 6, 8<br>1, 5, 6, 9<br>1, 5, 6, 10<br>1, 5, 7, 8<br>1, 5, 7, 9<br>1, 5, 7, 10<br>1, 5, 8, 8<br>1, 5, 8, 9<br>1, 5, 8, 10<br>1, 5, 9, 9<br>1, 5, 9, 10<br>1, 5, 10, 10<br>1, 6, 6, 6<br>1, 6, 6, 8<br>1, 6, 6, 9<br>1, 6, 6, 10<br>1, 6, 7, 9<br>1, 6, 7, 10<br>1, 6, 8, 8<br>1, 6, 8, 9<br>1, 6, 8, 10<br>1, 6, 9, 9<br>1, 6, 9, 10<br>1, 7, 7, 9<br>1, 7, 7, 10<br>1, 7, 8, 8<br>1, 7, 8, 9<br>1, 7, 8, 10<br>1, 7, 9, 9<br>1, 7, 9, 10<br>1, 8, 8, 8<br>1, 8, 8, 9<br>1, 8, 8, 10<br>2, 2, 2, 3<br>2, 2, 2, 4<br>2, 2, 2, 5<br>2, 2, 2, 7<br>2, 2, 2, 8<br>2, 2, 2, 9<br>2, 2, 2, 10<br>2, 2, 3, 3<br>2, 2, 3, 4<br>2, 2, 3, 5<br>2, 2, 3, 6<br>2, 2, 3, 7<br>2, 2, 3, 8<br>2, 2, 3, 9<br>2, 2, 3, 10<br>2, 2, 4, 4<br>2, 2, 4, 5<br>2, 2, 4, 6<br>2, 2, 4, 7<br>2, 2, 4, 8<br>2, 2, 4, 9<br>2, 2, 4, 10<br>2, 2, 5, 5<br>2, 2, 5, 6<br>2, 2, 5, 7<br>2, 2, 5, 8<br>2, 2, 5, 9<br>2, 2, 5, 10<br>2, 2, 6, 6<br>2, 2, 6, 7<br>2, 2, 6, 8<br>2, 2, 6, 9<br>2, 2, 6, 10<br>2, 2, 7, 7<br>2, 2, 7, 8<br>2, 2, 7, 10<br>2, 2, 8, 8<br>2, 2, 8, 9<br>2, 2, 8, 10<br>2, 2, 9, 10<br>2, 2, 10, 10<br>2, 3, 3, 3<br>2, 3, 3, 5<br>2, 3, 3, 6<br>2, 3, 3, 7<br>2, 3, 3, 8<br>2, 3, 3, 9<br>2, 3, 3, 10<br>2, 3, 4, 4<br>2, 3, 4, 5<br>2, 3, 4, 6<br>2, 3, 4, 7<br>2, 3, 4, 8<br>2, 3, 4, 9<br>2, 3, 4, 10<br>2, 3, 5, 5<br>2, 3, 5, 6<br>2, 3, 5, 7<br>2, 3, 5, 8<br>2, 3, 5, 9<br>2, 3, 5, 10<br>2, 3, 6, 6<br>2, 3, 6, 7<br>2, 3, 6, 8<br>2, 3, 6, 9<br>2, 3, 6, 10<br>2, 3, 7, 7<br>2, 3, 7, 8<br>2, 3, 7, 9<br>2, 3, 7, 10<br>2, 3, 8, 8<br>2, 3, 8, 9<br>2, 3, 8, 10<br>2, 3, 9, 9<br>2, 3, 9, 10<br>2, 3, 10, 10<br>2, 4, 4, 4<br>2, 4, 4, 5<br>2, 4, 4, 6<br>2, 4, 4, 7<br>2, 4, 4, 8<br>2, 4, 4, 9<br>2, 4, 4, 10<br>2, 4, 5, 5<br>2, 4, 5, 6<br>2, 4, 5, 7<br>2, 4, 5, 8<br>2, 4, 5, 9<br>2, 4, 5, 10<br>2, 4, 6, 6<br>2, 4, 6, 7<br>2, 4, 6, 8<br>2, 4, 6, 9<br>2, 4, 6, 10<br>2, 4, 7, 7<br>2, 4, 7, 8<br>2, 4, 7, 9<br>2, 4, 7, 10<br>2, 4, 8, 8<br>2, 4, 8, 9<br>2, 4, 8, 10<br>2, 4, 9, 9<br>2, 4, 9, 10<br>2, 4, 10, 10<br>2, 5, 5, 7<br>2, 5, 5, 8<br>2, 5, 5, 9<br>2, 5, 5, 10<br>2, 5, 6, 6<br>2, 5, 6, 7<br>2, 5, 6, 8<br>2, 5, 6, 9<br>2, 5, 6, 10<br>2, 5, 7, 7<br>2, 5, 7, 8<br>2, 5, 7, 9<br>2, 5, 7, 10<br>2, 5, 8, 8<br>2, 5, 8, 9<br>2, 5, 8, 10<br>2, 5, 9, 10<br>2, 5, 10, 10<br>2, 6, 6, 6<br>2, 6, 6, 7<br>2, 6, 6, 8<br>2, 6, 6, 9<br>2, 6, 6, 10<br>2, 6, 7, 8<br>2, 6, 7, 9<br>2, 6, 7, 10<br>2, 6, 8, 8<br>2, 6, 8, 9<br>2, 6, 8, 10<br>2, 6, 9, 9<br>2, 6, 9, 10<br>2, 6, 10, 10<br>2, 7, 7, 8<br>2, 7, 7, 10<br>2, 7, 8, 8<br>2, 7, 8, 9<br>2, 7, 9, 10<br>2, 7, 10, 10<br>2, 8, 8, 8<br>2, 8, 8, 9<br>2, 8, 8, 10<br>2, 8, 9, 9<br>2, 8, 9, 10<br>2, 8, 10, 10<br>2, 9, 10, 10<br>3, 3, 3, 3<br>3, 3, 3, 4<br>3, 3, 3, 5<br>3, 3, 3, 6<br>3, 3, 3, 7<br>3, 3, 3, 8<br>3, 3, 3, 9<br>3, 3, 3, 10<br>3, 3, 4, 4<br>3, 3, 4, 5<br>3, 3, 4, 6<br>3, 3, 4, 7<br>3, 3, 4, 8<br>3, 3, 4, 9<br>3, 3, 5, 5<br>3, 3, 5, 6<br>3, 3, 5, 7<br>3, 3, 5, 9<br>3, 3, 5, 10<br>3, 3, 6, 6<br>3, 3, 6, 7<br>3, 3, 6, 8<br>3, 3, 6, 9<br>3, 3, 6, 10<br>3, 3, 7, 7<br>3, 3, 7, 8<br>3, 3, 7, 9<br>3, 3, 8, 8<br>3, 3, 8, 9<br>3, 3, 8, 10<br>3, 3, 9, 9<br>3, 3, 9, 10<br>3, 4, 4, 4<br>3, 4, 4, 5<br>3, 4, 4, 6<br>3, 4, 4, 7<br>3, 4, 4, 8<br>3, 4, 4, 9<br>3, 4, 4, 10<br>3, 4, 5, 5<br>3, 4, 5, 6<br>3, 4, 5, 7<br>3, 4, 5, 8<br>3, 4, 5, 9<br>3, 4, 5, 10<br>3, 4, 6, 6<br>3, 4, 6, 8<br>3, 4, 6, 9<br>3, 4, 6, 10<br>3, 4, 7, 7<br>3, 4, 7, 8<br>3, 4, 7, 9<br>3, 4, 7, 10<br>3, 4, 8, 9<br>3, 4, 8, 10<br>3, 4, 9, 9<br>3, 4, 10, 10<br>3, 5, 5, 6<br>3, 5, 5, 7<br>3, 5, 5, 8<br>3, 5, 5, 9<br>3, 5, 6, 6<br>3, 5, 6, 7<br>3, 5, 6, 8<br>3, 5, 6, 9<br>3, 5, 6, 10<br>3, 5, 7, 8<br>3, 5, 7, 9<br>3, 5, 7, 10<br>3, 5, 8, 8<br>3, 5, 8, 9<br>3, 5, 9, 9<br>3, 5, 9, 10<br>3, 5, 10, 10<br>3, 6, 6, 6<br>3, 6, 6, 7<br>3, 6, 6, 8<br>3, 6, 6, 9<br>3, 6, 6, 10<br>3, 6, 7, 7<br>3, 6, 7, 8<br>3, 6, 7, 9<br>3, 6, 7, 10<br>3, 6, 8, 8<br>3, 6, 8, 9<br>3, 6, 8, 10<br>3, 6, 9, 9<br>3, 6, 9, 10<br>3, 6, 10, 10<br>3, 7, 7, 7<br>3, 7, 7, 8<br>3, 7, 7, 9<br>3, 7, 7, 10<br>3, 7, 8, 8<br>3, 7, 8, 9<br>3, 7, 9, 9<br>3, 7, 9, 10<br>3, 7, 10, 10<br>3, 8, 8, 8<br>3, 8, 8, 9<br>3, 8, 8, 10<br>3, 8, 9, 9<br>3, 8, 9, 10<br>3, 8, 10, 10<br>3, 9, 9, 9<br>3, 9, 9, 10<br>3, 9, 10, 10<br>4, 4, 4, 4<br>4, 4, 4, 5<br>4, 4, 4, 6<br>4, 4, 4, 7<br>4, 4, 4, 8<br>4, 4, 4, 9<br>4, 4, 4, 10<br>4, 4, 5, 5<br>4, 4, 5, 6<br>4, 4, 5, 7<br>4, 4, 5, 8<br>4, 4, 5, 10<br>4, 4, 6, 8<br>4, 4, 6, 9<br>4, 4, 6, 10<br>4, 4, 7, 7<br>4, 4, 7, 8<br>4, 4, 7, 9<br>4, 4, 7, 10<br>4, 4, 8, 8<br>4, 4, 8, 9<br>4, 4, 8, 10<br>4, 4, 10, 10<br>4, 5, 5, 5<br>4, 5, 5, 6<br>4, 5, 5, 7<br>4, 5, 5, 8<br>4, 5, 5, 9<br>4, 5, 5, 10<br>4, 5, 6, 6<br>4, 5, 6, 7<br>4, 5, 6, 8<br>4, 5, 6, 9<br>4, 5, 6, 10<br>4, 5, 7, 7<br>4, 5, 7, 8<br>4, 5, 7, 9<br>4, 5, 7, 10<br>4, 5, 8, 8<br>4, 5, 8, 9<br>4, 5, 8, 10<br>4, 5, 9, 9<br>4, 5, 9, 10<br>4, 5, 10, 10<br>4, 6, 6, 6<br>4, 6, 6, 7<br>4, 6, 6, 8<br>4, 6, 6, 9<br>4, 6, 6, 10<br>4, 6, 7, 7<br>4, 6, 7, 8<br>4, 6, 7, 9<br>4, 6, 7, 10<br>4, 6, 8, 8<br>4, 6, 8, 9<br>4, 6, 8, 10<br>4, 6, 9, 9<br>4, 6, 9, 10<br>4, 6, 10, 10<br>4, 7, 7, 7<br>4, 7, 7, 8<br>4, 7, 8, 8<br>4, 7, 8, 9<br>4, 7, 8, 10<br>4, 7, 9, 9<br>4, 7, 9, 10<br>4, 7, 10, 10<br>4, 8, 8, 8<br>4, 8, 8, 9<br>4, 8, 8, 10<br>4, 8, 9, 9<br>4, 8, 9, 10<br>4, 8, 10, 10<br>4, 9, 9, 10<br>5, 5, 5, 5<br>5, 5, 5, 6<br>5, 5, 5, 9<br>5, 5, 6, 6<br>5, 5, 6, 7<br>5, 5, 6, 8<br>5, 5, 7, 7<br>5, 5, 7, 8<br>5, 5, 7, 10<br>5, 5, 8, 8<br>5, 5, 8, 9<br>5, 5, 8, 10<br>5, 5, 9, 9<br>5, 5, 9, 10<br>5, 5, 10, 10<br>5, 6, 6, 6<br>5, 6, 6, 7<br>5, 6, 6, 8<br>5, 6, 6, 9<br>5, 6, 6, 10<br>5, 6, 7, 7<br>5, 6, 7, 8<br>5, 6, 7, 9<br>5, 6, 8, 8<br>5, 6, 8, 9<br>5, 6, 8, 10<br>5, 6, 9, 9<br>5, 6, 9, 10<br>5, 6, 10, 10<br>5, 7, 7, 9<br>5, 7, 7, 10<br>5, 7, 8, 8<br>5, 7, 8, 9<br>5, 7, 8, 10<br>5, 7, 9, 10<br>5, 7, 10, 10<br>5, 8, 8, 8<br>5, 8, 8, 9<br>5, 8, 8, 10<br>5, 9, 10, 10<br>6, 6, 6, 6<br>6, 6, 6, 8<br>6, 6, 6, 9<br>6, 6, 6, 10<br>6, 6, 7, 9<br>6, 6, 7, 10<br>6, 6, 8, 8<br>6, 6, 8, 9<br>6, 6, 8, 10<br>6, 6, 9, 10<br>6, 7, 7, 10<br>6, 7, 8, 9<br>6, 7, 8, 10<br>6, 7, 9, 9<br>6, 7, 10, 10<br>6, 8, 8, 8<br>6, 8, 8, 9<br>6, 8, 8, 10<br>6, 8, 9, 9<br>6, 8, 9, 10<br>6, 9, 9, 10<br>6, 10, 10, 10<br>7, 7, 9, 10<br>7, 8, 8, 9<br>7, 8, 8, 10<br>7, 8, 9, 10<br>7, 8, 10, 10<br>8, 8, 8, 10</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/08/24/my-first-blog/" data-id="ckejalqvs0000wounh6ji1gud" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/LeetCode/" rel="tag">LeetCode</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2020/08/21/hello-world/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Hello World</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/LeetCode/" rel="tag">LeetCode</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/LeetCode/" style="font-size: 10px;">LeetCode</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/08/24/my-first-blog/">从 LeetCode 679. 24 Game--C++ 解法--二十四点 到穷举24点所有可能性-24点大全</a>
+          </li>
+        
+          <li>
+            <a href="/2020/08/21/hello-world/">Hello World</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>
