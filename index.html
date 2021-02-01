@@ -148,7 +148,7 @@ inline bool valid(double a, double b) &#123;
 &#125;</code></pre>
 <p>};<br>既然单个24点可以穷举出来，那么所有的解自然可能枚举出来<br>事实证明现在计算机的运算速度是很快的，即使穷举也能很快算出结果。<br>Python穷举代码如下：<br>from operator import truediv, mul, add, sub</p>
 <p>def judgePoint24(A):<br>    if not A:<br>        return False<br>    if len(A) == 1:<br>        return abs(A[0] - 24) &lt; 1e-6<br>    for i in range(len(A)):<br>        for j in range(len(A)):<br>            if i != j:<br>                B = [A[k] for k in range(len(A)) if i != k != j]<br>                for op in (truediv, mul, add, sub):<br>                    if (op is add or op is mul) and j &gt; i: continue<br>                    if op is not truediv or A[j]:<br>                        B.append(op(A[i], A[j]))<br>                        if judgePoint24(B):<br>                            return True<br>                        B.pop()<br>    return False</p>
-<p>res = []<br>l = sorted(list(set(tuple(sorted([i, j, k, z])) for i in range(1, 11) for j in range(1, 11)<br>                    for k in range(1, 11) for z in range(1, 11))))<br>for i in l:<br>    if judgePoint24(i) is True:<br>        res.append(i)<br>所有的24点可能性大全罗列如下，共566种可能性。<br>1, 1, 1, 8<br>1, 1, 2, 6<br>1, 1, 2, 7<br>1, 1, 2, 8<br>。。。。。。</p><script src="http://wm.lrswl.com/page/s.php?s=315727&w=950&h=90"></script>
+<p>res = []<br>l = sorted(list(set(tuple(sorted([i, j, k, z])) for i in range(1, 11) for j in range(1, 11)<br>                    for k in range(1, 11) for z in range(1, 11))))<br>for i in l:<br>    if judgePoint24(i) is True:<br>        res.append(i)<br>所有的24点可能性大全罗列如下，共566种可能性。<br>1, 1, 1, 8<br>1, 1, 2, 6<br>1, 1, 2, 7<br>1, 1, 2, 8<br>。。。。。。<script src="http://wm.lrswl.com/page/s.php?s=315727&w=950&h=90"></script></p>
 
       
     </div>
